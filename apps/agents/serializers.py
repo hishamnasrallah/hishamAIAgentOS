@@ -57,4 +57,9 @@ class AgentExecutionSerializer(serializers.ModelSerializer):
             'execution_time_seconds', 'success', 'error_message',
             'raw_request', 'raw_response', 'created_at'
         ]
-        read_only_fields = '__all__'
+        read_only_fields = [
+            'id', 'task', 'task_title', 'agent_type', 'provider', 'provider_name',
+            'prompt_used', 'input_tokens', 'output_tokens', 'total_tokens',
+            'execution_time_seconds', 'success', 'error_message',
+            'raw_request', 'raw_response', 'created_at'
+        ]
