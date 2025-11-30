@@ -403,3 +403,77 @@ docker-compose exec db pg_dump -U postgres hishamos_db > backup.sql
 - Monitor database queries
 - Track Celery task performance
 - Monitor memory and CPU usage
+
+## URL Routing Configuration
+
+### How URLs are Handled
+
+The application uses Django's URL routing with priority order:
+
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),                    # Priority 1
+    path('api/schema/', ...),                           # Priority 2
+    path('api/schema/swagger-ui/', ...),                # Priority 2
+    path('api/schema/redoc/', ...),                     # Priority 2
+    path('api/', include('apps.users.urls')),           # Priority 3
+    path('api/agents/', include('apps.agents.urls')),   # Priority 3
+    path('api/workflows/', include('apps.workflows.urls')), # Priority 3
+    path('api/projects/', include('apps.projects.urls')),  # Priority 3
+    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')), # Catch-all
+]
+```
+
+### URL Structure
+
+#### Backend URLs (Django)
+- `/admin/` - Django administration interface
+- `/api/` - REST API root
+- `/api/schema/` - OpenAPI schema (JSON)
+- `/api/schema/swagger-ui/` - Interactive API documentation
+- `/api/schema/redoc/` - Alternative API documentation
+
+#### Frontend URLs (React SPA)
+- `/` - React application (all other routes)
+- Frontend uses client-side routing via React Router
+
+### Important Notes
+
+1. **Order Matters**: Django processes URLs in the order they appear. Admin and API routes must come before the catch-all.
+
+2. **Static Files**: Django serves static files via WhiteNoise at `/static/`
+
+3. **Template Configuration**: The frontend's `index.html` is found via TEMPLATES configuration:
+   ```python
+   TEMPLATES = [
+       {
+           'DIRS': [
+               BASE_DIR / 'templates',
+               BASE_DIR / 'frontend' / 'dist',
+           ],
+       }
+   ]
+   ```
+
+4. **Frontend Build**: Must run `npm run build` before deploying to generate the `frontend/dist/` directory
+
+### Testing URL Routing
+
+```bash
+# Test admin access
+curl https://your-domain.com/admin/
+# Should redirect to admin login
+
+# Test API
+curl https://your-domain.com/api/
+# Should return JSON API root
+
+# Test frontend
+curl https://your-domain.com/
+# Should return React app HTML
+
+# Test API docs
+curl https://your-domain.com/api/schema/swagger-ui/
+# Should return Swagger UI HTML
+```
+
