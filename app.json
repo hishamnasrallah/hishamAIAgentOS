@@ -1,0 +1,60 @@
+{
+  "name": "HishamOS",
+  "description": "AI-Powered Operating System for Software Development",
+  "repository": "https://github.com/yourusername/hishamos",
+  "keywords": ["django", "react", "ai", "agents", "celery"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": {
+      "description": "Django settings module",
+      "value": "config.settings.production"
+    },
+    "SECRET_KEY": {
+      "description": "Django secret key (generate a secure random string)",
+      "generator": "secret"
+    },
+    "ALLOWED_HOSTS": {
+      "description": "Comma-separated list of allowed hosts",
+      "value": "*"
+    },
+    "DEBUG": {
+      "description": "Enable debug mode (set to False in production)",
+      "value": "False"
+    },
+    "OPENAI_API_KEY": {
+      "description": "OpenAI API Key for AI features",
+      "required": false
+    },
+    "ANTHROPIC_API_KEY": {
+      "description": "Anthropic API Key for AI features",
+      "required": false
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini",
+      "as": "DATABASE"
+    },
+    {
+      "plan": "heroku-redis:mini",
+      "as": "REDIS"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}
