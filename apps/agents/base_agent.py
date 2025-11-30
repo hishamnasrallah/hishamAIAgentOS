@@ -153,6 +153,40 @@ class AgentFactory:
     """Factory class to create agent instances."""
 
     _agent_registry: Dict[str, type] = {}
+    _initialized = False
+
+    @classmethod
+    def _initialize_registry(cls):
+        """Initialize the agent registry with all available agents."""
+        if cls._initialized:
+            return
+
+        from .specialized import (
+            CodingAgent, CodeReviewAgent, BusinessAnalystAgent,
+            DevOpsAgent, QAAgent, ProjectManagerAgent, ScrumMasterAgent,
+            ReleaseManagerAgent, BugTriageAgent, SecurityAgent,
+            PerformanceAgent, DocumentationAgent, UIUXAgent,
+            DataAnalystAgent, SupportAgent
+        )
+
+        cls._agent_registry = {
+            AgentType.CODING: CodingAgent,
+            AgentType.CODE_REVIEW: CodeReviewAgent,
+            AgentType.BA: BusinessAnalystAgent,
+            AgentType.DEVOPS: DevOpsAgent,
+            AgentType.QA: QAAgent,
+            AgentType.PM: ProjectManagerAgent,
+            AgentType.SCRUM_MASTER: ScrumMasterAgent,
+            AgentType.RELEASE_MANAGER: ReleaseManagerAgent,
+            AgentType.BUG_TRIAGE: BugTriageAgent,
+            AgentType.SECURITY: SecurityAgent,
+            AgentType.PERFORMANCE: PerformanceAgent,
+            AgentType.DOCUMENTATION: DocumentationAgent,
+            AgentType.UI_UX: UIUXAgent,
+            AgentType.DATA_ANALYST: DataAnalystAgent,
+            AgentType.SUPPORT: SupportAgent,
+        }
+        cls._initialized = True
 
     @classmethod
     def register_agent(cls, agent_type: AgentType, agent_class: type):
@@ -167,6 +201,7 @@ class AgentFactory:
         prompt: Prompt
     ) -> BaseAgent:
         """Create an agent instance."""
+        cls._initialize_registry()
         agent_class = cls._agent_registry.get(agent_type)
         if not agent_class:
             raise ValueError(f"Unknown agent type: {agent_type}")
@@ -175,4 +210,5 @@ class AgentFactory:
     @classmethod
     def get_available_agents(cls) -> List[str]:
         """Get list of registered agent types."""
+        cls._initialize_registry()
         return list(cls._agent_registry.keys())
