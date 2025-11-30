@@ -1,0 +1,16 @@
+django>=5.0
+djangorestframework
+markdown
+django-filter
+celery
+redis
+psycopg2-binary
+python-decouple
+openai
+anthropic
+langchain
+beautifulsoup4
+pytest
+pytest-django
+flake8
+black
