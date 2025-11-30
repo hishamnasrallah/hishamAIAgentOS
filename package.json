@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "HishamOS - AI-Powered Operating System for Software Development",
   "scripts": {
-    "postinstall": "cd frontend && npm install",
+    "postinstall": "cd frontend && npm install --include=dev",
     "build": "cd frontend && npm run build",
     "dev": "cd frontend && npm run dev",
     "preview": "cd frontend && npm run preview"
