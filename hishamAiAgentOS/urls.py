@@ -14,6 +14,10 @@ urlpatterns = [
     path('api/agents/', include('apps.agents.urls')),
     path('api/workflows/', include('apps.workflows.urls')),
     path('api/projects/', include('apps.projects.urls')),
+]
 
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html'), name='frontend'),
+# Serve frontend for non-admin, non-api routes
+# This must be at the end but should NOT catch admin or api routes
+urlpatterns += [
+    re_path(r'^(?!admin|api|static).*$', TemplateView.as_view(template_name='index.html'), name='frontend'),
 ]

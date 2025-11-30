@@ -477,3 +477,65 @@ curl https://your-domain.com/api/schema/swagger-ui/
 # Should return Swagger UI HTML
 ```
 
+
+## Critical: URL Regex Pattern
+
+### The Problem
+
+When serving a React SPA with Django, you need a catch-all route to serve the frontend. However, this catch-all must NOT interfere with Django's admin or API routes.
+
+### Incorrect Pattern (WRONG)
+
+```python
+# ❌ This catches EVERYTHING including /admin/
+re_path(r'^.*$', TemplateView.as_view(template_name='index.html'))
+```
+
+This pattern matches ALL URLs, preventing Django admin and API from working.
+
+### Correct Pattern (RIGHT)
+
+```python
+# ✅ This excludes admin, api, and static routes
+re_path(r'^(?!admin|api|static).*$', TemplateView.as_view(template_name='index.html'))
+```
+
+### How It Works
+
+The pattern `^(?!admin|api|static).*$` uses a **negative lookahead**:
+
+- `^` - Start of string
+- `(?!admin|api|static)` - Must NOT start with admin, api, or static
+- `.*` - Match any characters
+- `$` - End of string
+
+### URL Matching Examples
+
+| URL | Pattern Match | Handler |
+|-----|---------------|---------|
+| `/admin/` | Matches `path('admin/', ...)` first | Django Admin ✅ |
+| `/api/users/` | Matches `path('api/', ...)` first | REST API ✅ |
+| `/static/css/style.css` | Excluded by negative lookahead | WhiteNoise ✅ |
+| `/about` | Matches catch-all regex | React Frontend ✅ |
+| `/dashboard` | Matches catch-all regex | React Frontend ✅ |
+
+### Testing
+
+After deployment, verify each route type:
+
+```bash
+# Django Admin - should show admin login
+curl https://your-domain.com/admin/
+
+# REST API - should return JSON
+curl https://your-domain.com/api/
+
+# Frontend - should return React HTML
+curl https://your-domain.com/
+
+# Static files - should return CSS
+curl https://your-domain.com/static/admin/css/base.css
+```
+
+All four should return different content types and work correctly.
+
