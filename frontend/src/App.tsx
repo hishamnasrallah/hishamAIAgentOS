@@ -1,4 +1,6 @@
 function App() {
+  const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-16">
@@ -114,20 +116,26 @@ function App() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">API Root:</span>
-                  <a href="http://localhost:8000/api/" target="_blank" className="text-blue-600 hover:underline">
+                  <a href={`${API_URL}/api/`} target="_blank" className="text-blue-600 hover:underline">
                     /api/
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Documentation:</span>
-                  <a href="http://localhost:8000/api/docs/" target="_blank" className="text-blue-600 hover:underline">
-                    /api/docs/
+                  <a href={`${API_URL}/api/schema/swagger-ui/`} target="_blank" className="text-blue-600 hover:underline">
+                    /api/schema/swagger-ui/
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">ReDoc:</span>
-                  <a href="http://localhost:8000/api/redoc/" target="_blank" className="text-blue-600 hover:underline">
-                    /api/redoc/
+                  <a href={`${API_URL}/api/schema/redoc/`} target="_blank" className="text-blue-600 hover:underline">
+                    /api/schema/redoc/
+                  </a>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Admin Panel:</span>
+                  <a href={`${API_URL}/admin/`} target="_blank" className="text-blue-600 hover:underline">
+                    /admin/
                   </a>
                 </div>
               </div>
