@@ -29,4 +29,8 @@ class AIProviderAdmin(admin.ModelAdmin):
 class AgentExecutionAdmin(admin.ModelAdmin):
     list_display = ['id', 'agent_type', 'task', 'provider', 'success', 'total_tokens', 'created_at']
     list_filter = ['agent_type', 'success', 'provider', 'created_at']
-    readonly_fields = '__all__'
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return [f.name for f in self.model._meta.fields]
+        return []
