@@ -41,6 +41,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='agentexecution',
-            index=models.Index(fields=['is_success', '-created_at'], name='agent_exec_success_idx'),
+            index=models.Index(fields=['success', '-created_at'], name='agent_exec_success_idx'),
         ),
     ]

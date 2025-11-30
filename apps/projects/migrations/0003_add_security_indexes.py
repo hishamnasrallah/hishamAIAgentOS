@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             index=models.Index(fields=['owner'], name='project_owner_idx'),
         ),
         migrations.AddIndex(
-            model_name='projectmember',
+            model_name='projectmembership',
             index=models.Index(fields=['user'], name='project_member_user_idx'),
         ),
     ]

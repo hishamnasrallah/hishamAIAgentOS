@@ -1,367 +1,285 @@
-# HishamOS - Quick Start Guide
+# ✅ HishamOS Quick Start Guide
 
-Get HishamOS up and running in 5 minutes!
+## 🎉 Everything is Ready!
 
-## Prerequisites
+All setup is complete. You just need to start the servers!
 
-- Python 3.11 or higher
-- PostgreSQL (or use Supabase)
-- Redis
+## 🚀 Start Both Applications
 
-## Installation (macOS/Linux)
+### Terminal 1: Start Backend (Django)
 
 ```bash
-# 1. Navigate to project directory
-cd /path/to/hishamAiAgentOS
-
-# 2. Run setup script
-chmod +x setup.sh
-./setup.sh
-
-# 3. Activate virtual environment
-source venv/bin/activate
-
-# 4. Configure environment
-# Edit .env with your credentials (database, Redis, AI keys)
-nano .env
-
-# 5. Create superuser
-python manage.py createsuperuser
-
-# 6. Start Redis (in new terminal)
-redis-server
-
-# 7. Start Django server
-python manage.py runserver
-
-# 8. Start Celery (in another terminal)
-source venv/bin/activate
-celery -A hishamAiAgentOS worker -l info
+./start-backend.sh
 ```
 
-## Installation (Windows)
+**Or manually:**
+```bash
+source venv/bin/activate
+export DJANGO_SETTINGS_MODULE=config.settings.local
+python manage.py runserver 8000
+```
 
-```powershell
-# 1. Navigate to project directory
-cd C:\path\to\hishamAiAgentOS
+**Expected output:**
+```
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+```
 
-# 2. Create virtual environment
-python -m venv venv
-venv\Scripts\activate
+### Terminal 2: Start Frontend (React/Vite)
 
-# 3. Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+```bash
+cd frontend
+npm run dev
+```
 
-# 4. Configure .env file
-copy .env.example .env
-# Edit .env with your settings
+**Expected output:**
+```
+➜  Local:   http://localhost:5173/
+➜  Network: use --host to expose
+```
 
-# 5. Run migrations
-python manage.py makemigrations
+## 🔐 Login Credentials
+
+**Admin Panel:** http://localhost:8000/admin/
+
+```
+Username: admin
+Password: Amman123
+```
+
+## 🎯 Access Points
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| Frontend | http://localhost:5173 | Main application |
+| Backend API | http://localhost:8000/api/ | REST API |
+| Admin Panel | http://localhost:8000/admin/ | Django admin |
+| API Docs | http://localhost:8000/api/schema/swagger-ui/ | Swagger UI |
+| API Docs | http://localhost:8000/api/schema/redoc/ | ReDoc |
+
+## ✅ What's Been Done
+
+1. ✅ Python virtual environment created (`venv/`)
+2. ✅ All Python packages installed (Django, DRF, Celery, etc.)
+3. ✅ Database migrations completed (SQLite: `demo.sqlite3`)
+4. ✅ Superuser created (admin/Amman123)
+5. ✅ Frontend configured with backend URL
+6. ✅ Smart URL detection added to frontend
+7. ✅ Startup script created (`start-backend.sh`)
+
+## 🧪 Testing the Setup
+
+### 1. Test Backend is Running
+
+Open browser: `http://localhost:8000/admin/`
+
+**Expected:** Django admin login page
+
+### 2. Test Frontend is Running
+
+Open browser: `http://localhost:5173/`
+
+**Expected:** HishamOS landing page
+
+### 3. Test Admin Panel Link
+
+From frontend homepage, click "Admin Panel"
+
+**Expected:** Opens `http://localhost:8000/admin/` (Django admin login)
+
+### 4. Login to Admin
+
+Use credentials:
+- Username: `admin`
+- Password: `Amman123`
+
+**Expected:** Django admin dashboard with all models
+
+## 🛠 Configuration
+
+### Backend (.env)
+```bash
+DEBUG=True
+SECRET_KEY=django-insecure-...
+DATABASE_URL=sqlite:///demo.sqlite3
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
+
+### Frontend (frontend/.env)
+```bash
+VITE_API_URL=http://localhost:8000
+```
+
+## 🏗 Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│           Browser (http://localhost:5173)               │
+│                 React/Vite Frontend                     │
+└───────────────────┬─────────────────────────────────────┘
+                    │
+                    │ API Calls to VITE_API_URL
+                    │ Admin links to :8000
+                    │
+                    ↓
+┌─────────────────────────────────────────────────────────┐
+│         Django Backend (http://localhost:8000)          │
+│                                                         │
+│  /admin/             → Django Admin Interface          │
+│  /api/               → REST API Endpoints              │
+│  /api/schema/        → API Documentation               │
+│                                                         │
+│  Database: SQLite (demo.sqlite3)                       │
+└─────────────────────────────────────────────────────────┘
+```
+
+## 📝 Development Workflow
+
+### Morning Startup
+```bash
+# Terminal 1: Backend
+./start-backend.sh
+
+# Terminal 2: Frontend
+cd frontend && npm run dev
+```
+
+### During Development
+
+**Backend changes (Python files):**
+- Django auto-reloads on file changes
+- No restart needed
+
+**Frontend changes (React files):**
+- Vite has hot module replacement
+- Changes appear instantly
+
+### Evening Shutdown
+```bash
+# Press Ctrl+C in both terminals
+```
+
+## 🔧 Common Commands
+
+### Backend
+
+```bash
+# Activate venv
+source venv/bin/activate
+
+# Run migrations
 python manage.py migrate
 
-# 6. Create superuser
+# Create superuser
 python manage.py createsuperuser
 
-# 7. Start Redis (in new terminal)
-redis-server
+# Start server
+python manage.py runserver 8000
 
-# 8. Start Django
-python manage.py runserver
+# Django shell
+python manage.py shell
 
-# 9. Start Celery (in another terminal)
-venv\Scripts\activate
-celery -A hishamAiAgentOS worker -l info
+# Run tests
+python manage.py test
 ```
 
-## Access Points
-
-Once running:
-
-- **API Base**: http://localhost:8000/api/
-- **Admin Panel**: http://localhost:8000/admin/
-- **API Documentation**: http://localhost:8000/api/docs/
-- **API Schema**: http://localhost:8000/api/schema/
-
-## First Steps
-
-### 1. Login to Admin
-Go to http://localhost:8000/admin/ and login with your superuser credentials.
-
-### 2. Configure AI Provider
-
-**Option A: Via API**
-```bash
-curl -X POST http://localhost:8000/api/agents/providers/ \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "OpenAI GPT-4",
-    "provider_type": "OPENAI",
-    "api_key": "sk-...",
-    "model_name": "gpt-4",
-    "is_active": true,
-    "max_tokens": 4096,
-    "temperature": 0.7
-  }'
-```
-
-**Option B: Via Admin Panel**
-1. Go to Admin → AI Providers → Add AI Provider
-2. Fill in the details
-3. Save
-
-### 3. Create Your First Project
+### Frontend
 
 ```bash
-# Get JWT token first
-curl -X POST http://localhost:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"email":"your@email.com","password":"yourpassword"}'
+cd frontend
 
-# Create project
-curl -X POST http://localhost:8000/api/projects/projects/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "key": "DEMO",
-    "name": "Demo Project",
-    "description": "My first HishamOS project"
-  }'
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-### 4. Create an Agent Task
+## 🐛 Troubleshooting
+
+### Issue: Port 8000 already in use
 
 ```bash
-curl -X POST http://localhost:8000/api/agents/tasks/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "agent_type": "CODING",
-    "title": "Create Hello World Function",
-    "description": "Create a simple hello world function in Python",
-    "priority": 5,
-    "input_data": {
-      "task_type": "NEW_BUILD",
-      "language": "Python",
-      "requirements": "Create a function that prints Hello World"
-    }
-  }'
-```
+# Find and kill the process
+lsof -ti:8000 | xargs kill -9
 
-### 5. Generate User Stories from Idea
-
-```bash
-curl -X POST http://localhost:8000/api/projects/stories/generate_from_idea/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "idea": "Build a task management app with drag and drop",
-    "project_id": 1
-  }'
-```
-
-## Environment Configuration
-
-### Required Settings (.env)
-
-```env
-# Django
-DEBUG=True
-SECRET_KEY=your-secret-key
-
-# Database (PostgreSQL)
-DB_NAME=hishamos_db
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_PORT=5432
-
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# AI Providers (at least one)
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-
-# CORS (for frontend)
-CORS_ALLOWED_ORIGINS=http://localhost:3000
-```
-
-### Optional Settings
-
-```env
-# Supabase (if using)
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_SUPABASE_ANON_KEY=your_key
-```
-
-## Testing the API
-
-### Using Swagger UI
-1. Go to http://localhost:8000/api/docs/
-2. Click "Authorize" and enter your JWT token
-3. Try different endpoints interactively
-
-### Using curl
-
-```bash
-# Register
-curl -X POST http://localhost:8000/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "test@example.com",
-    "username": "testuser",
-    "password": "SecurePass123!",
-    "password_confirm": "SecurePass123!",
-    "first_name": "Test",
-    "last_name": "User",
-    "role": "DEVELOPER"
-  }'
-
-# Login
-curl -X POST http://localhost:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "test@example.com",
-    "password": "SecurePass123!"
-  }'
-
-# Get current user (use access token from login)
-curl -X GET http://localhost:8000/api/users/me/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-
-# List agent types
-curl -X GET http://localhost:8000/api/agents/tasks/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-```
-
-### Using Python requests
-
-```python
-import requests
-
-BASE_URL = "http://localhost:8000/api"
-
-# Login
-response = requests.post(f"{BASE_URL}/auth/login/", json={
-    "email": "test@example.com",
-    "password": "SecurePass123!"
-})
-token = response.json()["access"]
-
-# Headers for authenticated requests
-headers = {"Authorization": f"Bearer {token}"}
-
-# Create project
-project = requests.post(f"{BASE_URL}/projects/projects/",
-    headers=headers,
-    json={
-        "key": "TEST",
-        "name": "Test Project",
-        "description": "Testing the API"
-    }
-)
-print(project.json())
-
-# Create agent task
-task = requests.post(f"{BASE_URL}/agents/tasks/",
-    headers=headers,
-    json={
-        "agent_type": "CODING",
-        "title": "Generate Python function",
-        "description": "Create a sorting function",
-        "priority": 3,
-        "input_data": {
-            "task_type": "NEW_BUILD",
-            "language": "Python",
-            "requirements": "Create a function to sort a list of numbers"
-        }
-    }
-)
-print(task.json())
-```
-
-## Common Issues
-
-### Port already in use
-```bash
-# Check what's using port 8000
-lsof -i :8000  # macOS/Linux
-netstat -ano | findstr :8000  # Windows
-
-# Kill the process or use different port
+# Or use a different port
 python manage.py runserver 8001
+
+# Update frontend/.env
+VITE_API_URL=http://localhost:8001
 ```
 
-### Redis not running
+### Issue: Admin link goes to :5173/admin/
+
+**Cause:** VITE_API_URL not set or frontend not restarted
+
+**Fix:**
 ```bash
-# Check if Redis is running
-redis-cli ping
+# 1. Verify frontend/.env
+cat frontend/.env
+# Should show: VITE_API_URL=http://localhost:8000
 
-# Should return: PONG
-
-# If not, start Redis
-redis-server
+# 2. Restart frontend
+cd frontend
+npm run dev
 ```
 
-### Database connection error
+### Issue: "Module not found" errors
+
+**Backend:**
 ```bash
-# Test PostgreSQL connection
-psql -h localhost -U postgres -d hishamos_db
-
-# Create database if it doesn't exist
-createdb hishamos_db
-```
-
-### Import errors
-```bash
-# Make sure virtual environment is activated
-source venv/bin/activate  # macOS/Linux
-venv\Scripts\activate  # Windows
-
-# Reinstall dependencies
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## What's Next?
+**Frontend:**
+```bash
+cd frontend
+npm install
+```
 
-1. **Explore the Admin**: http://localhost:8000/admin/
-   - Manage users
-   - Configure AI providers
-   - View agent tasks
-   - Monitor workflows
+### Issue: Database errors
 
-2. **Read the Documentation**:
-   - `README.md` - Complete overview
-   - `DEVELOPMENT.md` - Developer guide
-   - `BUILD_SUMMARY.md` - What's been built
-   - `docs/` - Detailed design docs
+```bash
+# Reset database (WARNING: Deletes all data)
+rm demo.sqlite3
+python manage.py migrate
+python manage.py createsuperuser
+```
 
-3. **Try the Agents**:
-   - Create coding tasks
-   - Request code reviews
-   - Generate user stories
-   - Build workflows
+## 🚀 Next Steps
 
-4. **Build the Frontend**:
-   - React + TypeScript
-   - Tailwind + shadcn/ui
-   - Connect to this API
+1. ✅ Start both servers
+2. ✅ Access http://localhost:5173
+3. ✅ Click "Admin Panel" - should open Django admin
+4. ✅ Login with admin/Amman123
+5. 🎉 Start developing!
 
-5. **Customize**:
-   - Add new agent types
-   - Create workflow templates
-   - Extend the models
-   - Add custom tools
+## 📚 Additional Resources
 
-## Support
+- **Project Documentation:** See `docs/` directory
+- **API Documentation:** http://localhost:8000/api/schema/swagger-ui/
+- **Django Admin:** http://localhost:8000/admin/
 
-- Check `DEVELOPMENT.md` for troubleshooting
-- Review API docs at http://localhost:8000/api/docs/
-- Examine the code - it's well-documented!
+## 🎊 Summary
 
----
+Everything is configured and ready to go! Just run:
 
-**Happy coding with HishamOS! 🚀**
+**Terminal 1:**
+```bash
+./start-backend.sh
+```
+
+**Terminal 2:**
+```bash
+cd frontend && npm run dev
+```
+
+Then open http://localhost:5173 and enjoy! 🎉
