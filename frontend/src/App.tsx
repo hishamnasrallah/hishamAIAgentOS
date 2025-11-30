@@ -1,5 +1,15 @@
 function App() {
-  const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
+  const getBackendUrl = (path: string) => {
+    if (import.meta.env.VITE_API_URL) {
+      return `${import.meta.env.VITE_API_URL}${path}`;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    if (currentUrl.port === '5173') {
+      currentUrl.port = '8000';
+    }
+    return `${currentUrl.origin}${path}`;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -116,25 +126,25 @@ function App() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">API Root:</span>
-                  <a href={`${API_URL}/api/`} target="_blank" className="text-blue-600 hover:underline">
+                  <a href={getBackendUrl('/api/')} target="_blank" className="text-blue-600 hover:underline">
                     /api/
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Documentation:</span>
-                  <a href={`${API_URL}/api/schema/swagger-ui/`} target="_blank" className="text-blue-600 hover:underline">
+                  <a href={getBackendUrl('/api/schema/swagger-ui/')} target="_blank" className="text-blue-600 hover:underline">
                     /api/schema/swagger-ui/
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">ReDoc:</span>
-                  <a href={`${API_URL}/api/schema/redoc/`} target="_blank" className="text-blue-600 hover:underline">
+                  <a href={getBackendUrl('/api/schema/redoc/')} target="_blank" className="text-blue-600 hover:underline">
                     /api/schema/redoc/
                   </a>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Admin Panel:</span>
-                  <a href={`${API_URL}/admin/`} target="_blank" className="text-blue-600 hover:underline">
+                  <a href={getBackendUrl('/admin/')} target="_blank" className="text-blue-600 hover:underline">
                     /admin/
                   </a>
                 </div>
